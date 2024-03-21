@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WySTI0AheA4GgXFhFZAAj98FLYBShGtM7W"
+          crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff; /* Bootstrap's primary color */
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Styling for Add to Cart button */
+        input[type="submit"] {
+            background-color: #28a745; /* Bootstrap's success color */
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #218838; /* Darker shade for hover effect */
+        }
+
+        /* Styling for header navigation */
+        header {
+               background-color: #333;
+               padding: 10px;
+           }
+
+           header a {
+               color: white;
+               margin-right: 10px;
+               text-decoration: none;
+           }
+
+           header a:hover {
+               text-decoration: underline;
+           }
+    </style>
+</head>
+<body>
+
+<header>
+    <a th:href="@{/cart}" class="text-info">Cart</a>
+    <a th:if="${#authorization.expression('isAuthenticated')}" th:href="@{/orders}" class="text-info">My Orders</a>
+
+
+    <a th:if="${#authorization.expression('isAuthenticated')}">
+        <a th:href="@{/logout}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            Logout
+        </a>
+        <form id="logout-form" th:action="@{/logout}" method="post" style="display: none;">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+        </form>
+    </a>
+    <a th:unless="${#authorization.expression('isAuthenticated')}">
+        <a th:href="@{/login}" class="text-info">Login</a>
+    </a>
+</header>
+
+<div class="container">
+    <h2>Bottles List</h2>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Picture</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Select quantity</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="bottle : ${bottles}">
+
+            <td>
+                <img th:src="${bottle.picture}" alt="Bottle Image" style="max-width: 150px; max-height: 150px;"/>
+            </td>
+
+            <td th:text="${bottle.name}"></td>
+            <td th:text="${bottle.price}"></td>
+            <td>
+                <form th:action="@{/addToCart/bottle/{productId}(productId=${bottle.id})}" method="post">
+
+                    <select name="quantity">
+                        <option th:each="i : ${#numbers.sequence(1, 100)}" th:value="${i}" th:text="${i}"></option>
+                    </select>
+            </td>
+            <td>
+                <input type="submit" class="btn btn-success" value="Add to Cart"/>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <h2>Crate List</h2>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Picture</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Select quantity</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="crate : ${crates}">
+
+            <td>
+                <img th:src="${crate.picture}" alt="crate Image" style="max-width: 150px; max-height: 150px;"/>
+            </td>
+
+            <td th:text="${crate.name}"></td>
+            <td th:text="${crate.price}"></td>
+            <td>
+                <form th:action="@{/addToCart/crate/{productId}(productId=${crate.id})}" method="post">
+                    <select name="quantity">
+                        <option th:each="i : ${#numbers.sequence(1, 100)}" th:value="${i}" th:text="${i}" th:selected="${i == 1}"></option>
+                    </select>
+            </td>
+            <td>
+                <input type="submit" class="btn btn-success" value="Add to Cart"/>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
+
