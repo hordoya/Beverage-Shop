@@ -28,14 +28,6 @@ public class CartController {
     @Autowired
     private OrderService orderService;
 
-//    @Autowired
-//    public CartController(BeverageService beverageService, CartService cartService, OrderService orderService) //constructor
-//    {
-//        this.beverageService = beverageService;
-//        this.cartService = cartService;
-//        this.orderService = orderService;
-//
-//    }
 
     @PostMapping("/addToCart/bottle/{productId}")
     public String addBottleToCart(@PathVariable Long productId, Model model,@RequestParam("quantity") int quantity) {
@@ -78,30 +70,7 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    @PostMapping("/order/create-order")
-    public String createOrder(Model model) {
-        List<CartItem> cartItems = this.cartService.findAllBeveragesInCart();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        Order order = new Order();
-        order.setUsername(username); // Set the username for the order
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (CartItem cartItem : cartItems) {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            orderItem.setBeverage(cartItem.getBeverage());
-            orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setPrice(cartItem.getBeverage().getPrice());
-            orderItems.add(orderItem);
-            order.setPrice(cartItem.getBeverage().getPrice());
 
-        }
-        order.setOrderItems(orderItems);
-        this.orderService.createOrder(order);
-        this.cartService.clearCart();
-        this.cartService.deleteAllCartItems();
-        return "redirect:/orders";
-    }
 
 }
 

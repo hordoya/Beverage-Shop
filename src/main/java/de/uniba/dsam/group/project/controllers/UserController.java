@@ -25,27 +25,5 @@ public class UserController {
         System.out.println(this.userService.getAllUsers());
         return this.userService.getAllUsers();
     }
-
-
-    @GetMapping({"/{userId}"})
-    public ResponseEntity<User> getUserById(@PathVariable Long userId){
-        User user = this.userService.getUserById(userId);
-        return (user != null) ? new ResponseEntity<>(user, HttpStatus.OK):
-                new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-    }
-
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteUserById(@PathVariable Long userId){
-        boolean didDelete = this.userService.deleteUserById(userId);
-        return didDelete ? new ResponseEntity<>("User Deleted successfully!", HttpStatus.OK):
-                new ResponseEntity<>("Could not find the id.", HttpStatus.NOT_FOUND);
-    }
-
-    @PutMapping("/{userId}")
-    public ResponseEntity<String> updateUser(@RequestBody User user, @PathVariable Long userId){
-        boolean didUpdate = this.userService.updateUser(user, userId);
-        return didUpdate ? new ResponseEntity<>("User updated successfully!", HttpStatus.OK):
-                new ResponseEntity<>("User could not be updated.", HttpStatus.NOT_FOUND);
-    }
 }
 
