@@ -24,8 +24,6 @@ public class SecurityConfig implements WebMvcConfigurer {
             "/addToCart/bottle/{productId}",
             "/addToCart/crate/{productId}",
             "/cart/delete/{itemId}",
-
-
     };
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -38,6 +36,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .requestMatchers("/browser/**").permitAll()
                 .requestMatchers("//**").permitAll()
                 .requestMatchers("/register").permitAll()
+                .requestMatchers("/css/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
@@ -64,15 +63,9 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 .logoutSuccessUrl("/login?logout")// Redirecting to login page after logout
                                 .permitAll()
                 );
-
-
-
         return http.build();
 
     }
-
-
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
